@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Utilisateur(AbstractUser):
 
-    photo_profil = models.TextField()
+    photo_profil = models.ImageField(upload_to='photos_profils/', null=True, blank=True)
     description = models.TextField(null=True)
     age = models.TextField(null=True)
     lien_cv = models.TextField(max_length=500, blank=True)
@@ -18,7 +18,7 @@ class Projet(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='projets')
     titre = models.CharField(max_length=200)
     resume = models.TextField()
-    image = models.TextField()
+    image = models.ImageField(upload_to='projets_images/', null=True, blank=True)
     lien = models.TextField(max_length=500)
 
     def __str__(self):

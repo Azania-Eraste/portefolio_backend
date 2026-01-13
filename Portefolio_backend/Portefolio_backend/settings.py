@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -59,8 +60,10 @@ MIDDLEWARE = [
 ROOT_URLCONF = "Portefolio_backend.urls"
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
 ]
 
 AUTH_USER_MODEL = 'User_portefolio.Utilisateur'
@@ -134,3 +137,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# URL publique pour accéder aux fichiers (C'est ce qui manquait probablement)
+MEDIA_URL = '/media/'
+
+# Dossier physique où sont stockés les fichiers sur ton ordinateur
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
