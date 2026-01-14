@@ -67,7 +67,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
     "https://mon-portefolio-api.onrender.com",
-    "https://portefolio-frontend.vercel.app",
+    "https://portefolio-aza.vercel.app",
 ]
 
 AUTH_USER_MODEL = 'User_portefolio.Utilisateur'
