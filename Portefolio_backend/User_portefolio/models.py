@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Utilisateur(AbstractUser):
 
-    photo_profil = models.ImageField(upload_to='photos_profils/', null=True, blank=True)
+    photo_profil = models.URLField(max_length=500, blank=True, null=True)
     description = models.TextField(null=True)
     age = models.TextField(null=True)
     lien_cv = models.TextField(max_length=500, blank=True)
