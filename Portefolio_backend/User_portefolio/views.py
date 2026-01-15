@@ -1,7 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
     Utilisateur, Projet, Experience, Localisation,
-    Service, ReseauSocial, PriseDeContact
+    Service, ReseauSocial, PriseDeContact, TypeDeProjet
 )
 
 from .serializers import (
@@ -18,6 +21,14 @@ class UtilisateurViewSet(ModelViewSet):
 class ProjetViewSet(ModelViewSet):
     queryset = Projet.objects.all()
     serializer_class = ProjetSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["type_de_projet"]
+
+    @action(detail=False, methods=["get"], url_path="types")
+    def types(self, request):
+        """Retourne la liste des types de projet disponibles (clé + libellé)."""
+        types = [{"key": tag.name, "label": tag.value} for tag in TypeDeProjet]
+        return Response(types)
 
 
 class ExperienceViewSet(ModelViewSet):
