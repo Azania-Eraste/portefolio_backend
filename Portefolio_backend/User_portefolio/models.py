@@ -30,10 +30,17 @@ class Projet(models.Model):
         choices=[(tag.name, tag.value) for tag in TypeDeProjet],
         default='WEB' # Optionnel : tu peux mettre une valeur par défaut si tu veux
     )
+    languages = models.ManyToManyField('Language', related_name='projets', blank=True)
 
     def __str__(self):
         return self.titre
     
+
+class Language(models.Model):
+    nom = models.CharField(max_length=100)
+
+
+
 class Experience(models.Model):
     Utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='experiences')
     date_debut = models.DateField()

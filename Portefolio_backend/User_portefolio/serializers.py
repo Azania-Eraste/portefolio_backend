@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    Utilisateur, Projet, Experience, Localisation,
+    Language, Utilisateur, Projet, Experience, Localisation,
     Service, ReseauSocial, PriseDeContact
 )
 
@@ -35,7 +35,13 @@ class UtilisateurSerializer(serializers.ModelSerializer):
         model = Utilisateur
         fields = "__all__"
 
+class languageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = "__all__"
+
 class ProjetSerializer(serializers.ModelSerializer):
+    language =languageSerializer
     class Meta:
         model = Projet
         fields = "__all__"
