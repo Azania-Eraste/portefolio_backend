@@ -29,8 +29,8 @@ class UtilisateurAdmin(UserAdmin):
 
 @admin.register(Projet)
 class ProjetAdmin(admin.ModelAdmin):
-    list_display = ("titre", "utilisateur", "lien")
-    list_filter = ("utilisateur",)
+    list_display = ("titre", "utilisateur", "lien", "type_de_projet")
+    list_filter = ("utilisateur", "type_de_projet")
     search_fields = ("titre", "resume")
     autocomplete_fields = ("utilisateur",)
 

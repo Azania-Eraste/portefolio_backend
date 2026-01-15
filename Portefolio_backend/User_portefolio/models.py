@@ -1,6 +1,10 @@
+import enum
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+class TypeDeProjet(enum.Enum):
+    MOBILE = "Mobile"
+    WEB = "Web"
 
 
 class Utilisateur(AbstractUser):
@@ -20,6 +24,12 @@ class Projet(models.Model):
     resume = models.TextField()
     image = models.ImageField(upload_to='projets_images/', null=True, blank=True)
     lien = models.TextField(max_length=500)
+    # On utilise CharField pour stocker du texte
+    type_de_projet = models.CharField(
+        max_length=50, # Obligatoire pour un CharField
+        choices=[(tag.name, tag.value) for tag in TypeDeProjet],
+        default='WEB' # Optionnel : tu peux mettre une valeur par défaut si tu veux
+    )
 
     def __str__(self):
         return self.titre
