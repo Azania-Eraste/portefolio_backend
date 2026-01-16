@@ -35,13 +35,15 @@ class UtilisateurSerializer(serializers.ModelSerializer):
         model = Utilisateur
         fields = "__all__"
 
-class languageSerializer(serializers.ModelSerializer):
+class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = "__all__"
 
 class ProjetSerializer(serializers.ModelSerializer):
-    language =languageSerializer
+    # Sérialiser correctement la relation ManyToMany
+    languages = LanguageSerializer(many=True, read_only=True)
+
     class Meta:
         model = Projet
         fields = "__all__"
