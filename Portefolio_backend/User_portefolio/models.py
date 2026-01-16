@@ -39,6 +39,9 @@ class Projet(models.Model):
 class Language(models.Model):
     nom = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nom
+
 
 
 class Experience(models.Model):
