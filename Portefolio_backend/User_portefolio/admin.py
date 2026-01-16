@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Utilisateur, Projet, Experience, Localisation,
-    Service, ReseauSocial, PriseDeContact
+    Service, ReseauSocial, PriseDeContact, Language
 )
 from django.contrib.auth.admin import UserAdmin
 
@@ -45,3 +45,9 @@ class ExperienceAdmin(admin.ModelAdmin):
 @admin.register(Localisation)
 class LocalisationAdmin(admin.ModelAdmin):
     list_display = ("pays", "ville", "quartier")
+
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ("nom",)
+    search_fields = ("nom",)
