@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     Language, Utilisateur, Projet, Experience, Localisation,
-    Service, ReseauSocial, PriseDeContact
+    Service, ReseauSocial, PriseDeContact, Competence
 )
 
 # 1. Localisation (Niveau le plus bas)
@@ -40,9 +40,19 @@ class LanguageSerializer(serializers.ModelSerializer):
         model = Language
         fields = "__all__"
 
+class CompetenceSerializer(serializers.ModelSerializer):
+    """Sérialiser pour les compétences avec détails complets"""
+    categorie_display = serializers.CharField(source='get_categorie_display', read_only=True)
+    niveau_display = serializers.CharField(source='get_niveau_display', read_only=True)
+    
+    class Meta:
+        model = Competence
+        fields = "__all__"
+
 class ProjetSerializer(serializers.ModelSerializer):
     # Sérialiser correctement la relation ManyToMany
     languages = LanguageSerializer(many=True, read_only=True)
+    competences = CompetenceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Projet

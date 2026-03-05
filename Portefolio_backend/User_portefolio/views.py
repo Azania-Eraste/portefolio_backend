@@ -4,13 +4,13 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import (
     Utilisateur, Projet, Experience, Localisation,
-    Service, ReseauSocial, PriseDeContact, TypeDeProjet
+    Service, ReseauSocial, PriseDeContact, TypeDeProjet, Language, Competence, CategorieCompetence, NiveauCompetence
 )
 
 from .serializers import (
     UtilisateurSerializer, ProjetSerializer, ExperienceSerializer,
     LocalisationSerializer, ServiceSerializer, ReseauSocialSerializer,
-    PriseDeContactSerializer
+    PriseDeContactSerializer, LanguageSerializer, CompetenceSerializer
 )
 
 class UtilisateurViewSet(ModelViewSet):
@@ -54,3 +54,27 @@ class ReseauSocialViewSet(ModelViewSet):
 class PriseDeContactViewSet(ModelViewSet):
     queryset = PriseDeContact.objects.all()
     serializer_class = PriseDeContactSerializer
+
+
+class LanguageViewSet(ModelViewSet):
+    queryset = Language.objects.all()
+    serializer_class = LanguageSerializer
+
+
+class CompetenceViewSet(ModelViewSet):
+    queryset = Competence.objects.all()
+    serializer_class = CompetenceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["categorie", "niveau"]
+
+    @action(detail=False, methods=["get"], url_path="categories")
+    def categories(self, request):
+        """Retourne la liste des catégories de compétences disponibles."""
+        categories = [{"key": tag.name, "label": tag.value} for tag in CategorieCompetence]
+        return Response(categories)
+
+    @action(detail=False, methods=["get"], url_path="niveaux")
+    def niveaux(self, request):
+        """Retourne la liste des niveaux de compétences disponibles."""
+        niveaux = [{"key": tag.name, "label": tag.value} for tag in NiveauCompetence]
+        return Response(niveaux)

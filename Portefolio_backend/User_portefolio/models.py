@@ -7,6 +7,24 @@ class TypeDeProjet(enum.Enum):
     WEB = "Web"
 
 
+class CategorieCompetence(enum.Enum):
+    """Catégories de compétences"""
+    LANGAGE_PROGRAMMATION = "Langage de Programmation"
+    FRAMEWORK = "Framework"
+    LOGICIEL = "Logiciel"
+    BASE_DONNEES = "Base de Données"
+    OUTIL = "Outil"
+    AUTRE = "Autre"
+
+
+class NiveauCompetence(enum.Enum):
+    """Niveaux de maîtrise une compétence"""
+    DEBUTANT = "Débutant"
+    INTERMEDIAIRE = "Intermédiaire"
+    AVANCE = "Avancé"
+    EXPERT = "Expert"
+
+
 class Utilisateur(AbstractUser):
 
     photo_profil = models.URLField(max_length=500, blank=True, null=True)
@@ -31,6 +49,7 @@ class Projet(models.Model):
         default='WEB' # Optionnel : tu peux mettre une valeur par défaut si tu veux
     )
     languages = models.ManyToManyField('Language', related_name='projets', blank=True)
+    competences = models.ManyToManyField('Competence', related_name='projets', blank=True)
 
     def __str__(self):
         return self.titre
@@ -41,6 +60,30 @@ class Language(models.Model):
 
     def __str__(self):
         return self.nom
+
+
+class Competence(models.Model):
+    """Modèle pour les compétences techniques (langages, frameworks, logiciels, etc.)"""
+    nom = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
+    categorie = models.CharField(
+        max_length=50,
+        choices=[(tag.name, tag.value) for tag in CategorieCompetence],
+        default='AUTRE'
+    )
+    niveau = models.CharField(
+        max_length=50,
+        choices=[(tag.name, tag.value) for tag in NiveauCompetence],
+        default='INTERMEDIAIRE'
+    )
+    icone_url = models.URLField(max_length=500, blank=True, null=True)  # URL vers une icone (exemple: Logo Python, React, etc.)
+    date_acquisition = models.DateField(blank=True, null=True)  # Quand avez-vous commencé à apprendre cette compétence
+    
+    class Meta:
+        ordering = ['categorie', 'nom']
+    
+    def __str__(self):
+        return f"{self.nom} ({self.get_categorie_display()})"
 
 
 
