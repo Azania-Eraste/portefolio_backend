@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Utilisateur, Projet, Experience, Localisation,
-    Service, ReseauSocial, PriseDeContact, Language
+    Language, Competence
 )
 from django.contrib.auth.admin import UserAdmin
 
@@ -51,3 +51,11 @@ class LocalisationAdmin(admin.ModelAdmin):
 class LanguageAdmin(admin.ModelAdmin):
     list_display = ("nom",)
     search_fields = ("nom",)
+
+
+@admin.register(Competence)
+class CompetenceAdmin(admin.ModelAdmin):
+    list_display = ("nom", "categorie", "niveau", "date_acquisition")
+    list_filter = ("categorie", "niveau")
+    search_fields = ("nom", "description")
+    ordering = ("categorie", "nom")
