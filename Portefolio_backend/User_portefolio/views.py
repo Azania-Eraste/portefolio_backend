@@ -2,6 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import (
     Utilisateur, Projet, Experience, Localisation,
     Service, ReseauSocial, PriseDeContact, TypeDeProjet, Language, Competence, CategorieCompetence, NiveauCompetence
@@ -54,6 +56,41 @@ class ReseauSocialViewSet(ModelViewSet):
 class PriseDeContactViewSet(ModelViewSet):
     queryset = PriseDeContact.objects.all()
     serializer_class = PriseDeContactSerializer
+
+    def perform_create(self, serializer):
+        """Envoie un email de confirmation après la création d'un contact"""
+        contact = serializer.save()
+        
+        # Préparer le contenu de l'email de confirmation
+        sujet = "Confirmation de réception de votre message"
+        message = f"""Bonjour {contact.nom_complet},
+
+Nous avons bien reçu votre message concernant : {contact.objet}
+
+Voici un récapitulatif de votre demande :
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Objet : {contact.objet}
+Message : {contact.message}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Nous reviendrons vers vous dans les plus brefs délais.
+
+Cordialement,
+L'équipe Portfolio
+        """
+        
+        try:
+            # Envoyer l'email de confirmation à l'utilisateur
+            send_mail(
+                subject=sujet,
+                message=message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[contact.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            # En cas d'erreur d'envoi, on log mais on ne bloque pas la création
+            print(f"Erreur lors de l'envoi de l'email : {e}")
 
 
 class LanguageViewSet(ModelViewSet):
