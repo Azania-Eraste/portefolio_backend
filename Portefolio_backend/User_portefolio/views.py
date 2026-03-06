@@ -61,6 +61,16 @@ class PriseDeContactViewSet(ModelViewSet):
         """Envoie un email de confirmation après la création d'un contact"""
         contact = serializer.save()
         
+        # Vérifier si la configuration email est disponible
+        email_configured = (
+            settings.EMAIL_BACKEND == 'django.core.mail.backends.console.EmailBackend' or
+            (hasattr(settings, 'EMAIL_HOST_USER') and settings.EMAIL_HOST_USER)
+        )
+        
+        if not email_configured:
+            print("⚠️ Configuration email non disponible - Email non envoyé")
+            return
+        
         # Préparer le contenu de l'email de confirmation
         sujet = "Confirmation de réception de votre message"
         message = f"""Bonjour {contact.nom_complet},
@@ -86,11 +96,13 @@ L'équipe Portfolio
                 message=message,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[contact.email],
-                fail_silently=False,
+                fail_silently=True,  # Ne pas bloquer si l'envoi échoue
             )
+            print(f"✅ Email de confirmation envoyé à {contact.email}")
         except Exception as e:
             # En cas d'erreur d'envoi, on log mais on ne bloque pas la création
-            print(f"Erreur lors de l'envoi de l'email : {e}")
+            print(f"❌ Erreur lors de l'envoi de l'email : {e}")
+            # L'enregistrement du contact reste valide même si l'email échoue
 
 
 class LanguageViewSet(ModelViewSet):
