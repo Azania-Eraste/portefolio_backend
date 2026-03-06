@@ -17,6 +17,13 @@ class CategorieCompetence(enum.Enum):
     AUTRE = "Autre"
 
 
+class ReseauSocialEnum(enum.Enum):
+    LINKEDIN = "LinkedIn"
+    GITHUB = "GitHub"
+    TWITTER = "Twitter"
+    FACEBOOK = "Facebook"
+    INSTAGRAM = "Instagram"
+
 class NiveauCompetence(enum.Enum):
     """Niveaux de maîtrise une compétence"""
     DEBUTANT = "Débutant"
@@ -113,7 +120,7 @@ class Service(models.Model):
 
 class ReseauSocial(models.Model):
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE, related_name='reseaux')
-    nom_plateforme = models.CharField(max_length=50)
+    nom_plateforme = models.CharField(max_length=50, choices=[(tag.name, tag.value) for tag in ReseauSocialEnum])
     lien = models.TextField()
 
 class PriseDeContact(models.Model):
