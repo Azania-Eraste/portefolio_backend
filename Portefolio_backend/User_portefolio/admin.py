@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Utilisateur, Projet, Experience, Localisation,
-    Language, Competence
+    Language, Competence, ReseauSocial, PriseDeContact
 )
 from django.contrib.auth.admin import UserAdmin
 
@@ -59,3 +59,20 @@ class CompetenceAdmin(admin.ModelAdmin):
     list_filter = ("categorie", "niveau")
     search_fields = ("nom", "description")
     ordering = ("categorie", "nom")
+
+
+@admin.register(ReseauSocial)
+class ReseauSocialAdmin(admin.ModelAdmin):
+    list_display = ("nom_plateforme", "utilisateur", "lien")
+    list_filter = ("nom_plateforme",)
+    search_fields = ("nom_plateforme", "lien")
+    autocomplete_fields = ("utilisateur",)
+
+
+@admin.register(PriseDeContact)
+class PriseDeContactAdmin(admin.ModelAdmin):
+    list_display = ("nom_complet", "email", "objet", "date_envoi")
+    list_filter = ("date_envoi",)
+    search_fields = ("nom_complet", "email", "objet", "message")
+    readonly_fields = ("date_envoi",)
+    ordering = ("-date_envoi",)
