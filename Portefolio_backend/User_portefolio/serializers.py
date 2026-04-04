@@ -4,53 +4,51 @@ from .models import (
     Service, ReseauSocial, PriseDeContact, Competence
 )
 
-# 1. Localisation (Niveau le plus bas)
+
 class LocalisationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Localisation
         fields = "__all__"
 
-# 2. Service (Dépend de Localisation)
+
 class ServiceSerializer(serializers.ModelSerializer):
-    # On imbrique l'objet complet Localisation au lieu d'avoir juste un ID
     localisation = LocalisationSerializer(read_only=True)
 
     class Meta:
         model = Service
         fields = "__all__"
 
-# 3. Experience (Parent de Service)
+
 class ExperienceSerializer(serializers.ModelSerializer):
-    # CRUCIAL : On récupère la liste des services liés.
-    # Le nom 'services' doit correspondre au related_name='services' défini dans ton models.py
     services = ServiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Experience
         fields = "__all__"
 
-# 4. Les autres (Indépendants)
+
 class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateur
-        fields = "__all__"
+        exclude = ['password', 'is_superuser', 'is_staff', 'groups', 'user_permissions', 'last_login']
+
 
 class LanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = "__all__"
 
+
 class CompetenceSerializer(serializers.ModelSerializer):
-    """Sérialiser pour les compétences avec détails complets"""
     categorie_display = serializers.CharField(source='get_categorie_display', read_only=True)
     niveau_display = serializers.CharField(source='get_niveau_display', read_only=True)
-    
+
     class Meta:
         model = Competence
         fields = "__all__"
 
+
 class ProjetSerializer(serializers.ModelSerializer):
-    # Sérialiser correctement la relation ManyToMany
     languages = LanguageSerializer(many=True, read_only=True)
     competences = CompetenceSerializer(many=True, read_only=True)
 
@@ -58,12 +56,15 @@ class ProjetSerializer(serializers.ModelSerializer):
         model = Projet
         fields = "__all__"
 
+
 class ReseauSocialSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReseauSocial
         fields = "__all__"
 
+
 class PriseDeContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriseDeContact
         fields = "__all__"
+        read_only_fields = ['date_envoi']
